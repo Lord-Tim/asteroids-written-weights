@@ -1,20 +1,42 @@
 # Asteroids / Written Weights
 
-A downloadable Windows x64 player with an inspectable, separate game-model JSON file.
+A playable experiment in encoding an Asteroids-style game as a **hand-constructed numerical graph**, loaded by a separate player.
+
+In the latest Linux S4 version, the graph produces gameplay, score digits, labels and line geometry. It also maps raw key inputs, initializes from zero state and handles reset. The host supplies numerical evaluation, state storage, timing, keyboard input, window management and line drawing.
+
+This is a deterministic affine/ReLU circuit, not a trained AI model. Both the graph connections and its weights/biases encode behavior. A generic runtime is still required.
 
 ## Download and play
 
-**[Download for Windows x64](https://github.com/Lord-Tim/asteroids-written-weights/releases/download/windows-w1/Asteroids-Windows-Player-W1.zip)** (13.1 MiB ZIP)
+- **[Linux x86-64: S4 player](https://github.com/Lord-Tim/asteroids-written-weights/releases/download/linux-s4/Asteroids-Linux-x86_64-S4.tar.gz)** (6.7 MiB, silent). [Release notes and checksums](https://github.com/Lord-Tim/asteroids-written-weights/releases/tag/linux-s4).
+- **[Windows x64: W1 player](https://github.com/Lord-Tim/asteroids-written-weights/releases/download/windows-w1/Asteroids-Windows-Player-W1.zip)** (13.1 MiB, earlier version). [Windows release notes](https://github.com/Lord-Tim/asteroids-written-weights/releases/tag/windows-w1).
+- **[S4 source, model compiler and tests](https://github.com/Lord-Tim/asteroids-written-weights/releases/download/linux-s4/Asteroids-S4-Source.zip)** (2.0 MiB, optional). Not needed to play.
 
-[Release notes and checksum](https://github.com/Lord-Tim/asteroids-written-weights/releases/tag/windows-w1). GitHub's automatically generated source archives are not the Windows game download.
+Download the named player asset for your operating system. GitHub's automatic **Source code** ZIP/tar.gz files are not the ready-to-run player.
 
-1. Right-click the downloaded ZIP and choose **Extract All**. Keep all extracted files and folders together.
-2. Open **ModelPlayer-W1.exe**.
-3. Click **Load model JSON...**, select **model/Asteroids-R2.model.json**, and click **Start**.
+### Linux S4
 
-Python, a browser, an account, and an internet connection are not required to play. The bundled runtime is in the `_internal` folder. This is a Windows x64 build, not a macOS or Linux application.
+1. Extract the entire archive and keep its files together.
+2. Open a terminal in the extracted folder and run `./Start-Player`.
+3. Click **Load model JSON...**, choose `app/model/Asteroids-S4.model.json`, then **Start**.
 
-The executable is unsigned. If Windows or your security software blocks it, do not disable security protections. Only run files from a source you trust.
+You can also launch directly:
+
+```sh
+./Start-Player app/model/Asteroids-S4.model.json
+```
+
+Requires **Linux x86-64, glibc 2.38+ and X11/XWayland**, with the usual X11/Xft/Xss/fontconfig graphics libraries. Python and Tcl/Tk are bundled. No account, browser, system Python installation or internet connection is required to play. **There is no sound in S4.** Native Wayland, Windows, macOS and ARM are not supported by this Linux package. The project owner has tested this S4 build on Omarchy and reported that it plays well; this is not a compatibility guarantee for every Linux system.
+
+See [full Linux requirements and instructions](LINUX-S4.md). If extraction lost the executable bit, run `chmod +x Start-Player`.
+
+### Windows W1
+
+1. Right-click the ZIP and choose **Extract All**.
+2. Open `ModelPlayer-W1.exe`.
+3. Click **Load model JSON...**, choose `model/Asteroids-R2.model.json`, then **Start**.
+
+Keep the executable, `_internal/` and `model/` together. Python is bundled. The executable is unsigned; do not disable security protections to run it. Sound starts off. W1 is the earlier Windows version, not a Windows port of S4. Its existing release is unchanged. See [Windows instructions and verification limits](WINDOWS-W1.md).
 
 ## Controls
 
@@ -24,46 +46,42 @@ The executable is unsigned. If Windows or your security software blocks it, do n
 - Hyperspace: **H** or **Shift**
 - Reset: **Enter** or **R**
 
-Sound starts off. Switching away from the window or minimizing it pauses play. Click **Resume** when you return.
+Leaving or minimizing the window pauses play and clears held keys. Click **Resume** to continue.
 
-## What's included
+## Inspect the model
 
-- `ModelPlayer-W1.exe`: the Windows player.
-- `model/Asteroids-R2.model.json`: sparse game weights, interface metadata, and stored PCM audio.
-- `_internal/`: the bundled Python/Tk runtime and native libraries.
-- `licenses/`: the third-party license notices included with this build.
-- `README.txt`: quick-start instructions.
+The player and model are separate. Load only trusted model files.
 
-Optional inspection controls can zero weights or disconnect an input in memory without changing the saved model file. Load only trusted model files.
+In S4, enable **Show model inspection and ablation controls** to try changes in memory:
 
-This release packages the player and model for download. It is not a complete source-code distribution or a reproducible build kit.
+- Zero all weights and biases: gameplay and labels disappear.
+- Disconnect raw key slot **32**: Space loses its influence, while X can still fire through its separate input.
+- Restore **Normal**, then **Apply and restart**, to play again.
 
-## Model provenance
+These experiments do not change the saved JSON. **Unload** returns to the empty player.
 
-The model identifies `Asteroids-Written-Weights-R2.html` as its source. The game graph was copied unchanged during separation, and the constant audio graph was losslessly decoded to Float32 PCM. No model training was performed during that separation or the Windows port. Historical training provenance has not been independently established by the artifact.
+The optional S4 source archive includes the player source, native evaluator, preserved input graph, model compiler, final model and repeatable tests. Its compiler regenerates the shipped model byte-for-byte. It does not include a complete reproducible build recipe for the bundled third-party Python/Tk runtime.
 
-## Testing and limitations
+## Verification and limits
 
-The executable, runtime, and model are unchanged from the Windows-tested W1 build. The cleaned ZIP passed an archive-integrity check in the cloud; the cleaned package was not retested in a Windows GUI. Physical audio output and behavior on other computers remain untested.
+Before publication, S4 passed 3,601 original-reference frames, bit-exact original gameplay state and geometry checks (with the intentional HUD offset), raw-key mapping, reset, zeroing, malformed-input checks, model regeneration and player-archive checksums. See [verification scope](S4-VERIFICATION.md).
 
-The application is designed to make no network requests. This is not an operating-system-enforced network sandbox.
+These are bounded checks, not exhaustive game fidelity or a broad operating-system certification. S4 is silent. The applications are designed to make no network requests; they are not operating-system-enforced network sandboxes.
 
-## Verify the download
+## Verify downloads
 
-File: `Asteroids-Windows-Player-W1.zip`  
-Size: **13,744,034 bytes**  
-SHA-256:
+Download `SHA256SUMS.txt` from the same release. For Linux S4:
 
-```text
-1dc174b8f4a5654aa1b44fabb8d959cb15770b643d4bb70796295b175d6d736c
+```sh
+sha256sum Asteroids-Linux-x86_64-S4.tar.gz
 ```
 
-In PowerShell, run:
+Expected SHA-256:
 
-```powershell
-Get-FileHash .\Asteroids-Windows-Player-W1.zip -Algorithm SHA256
+```text
+115be87c0dac5a9e40d5a1e8a3cf0fc85ac9112e026bea86613f2ad440e40550
 ```
 
 ## License notices
 
-The bundled third-party components retain their respective licenses and notices. No new project-wide license is granted by this repository. Public availability alone does not grant permission to reuse or redistribute every component.
+Bundled third-party components retain their respective licenses and notices. Preserve those notices when redistributing. No new project-wide or game/model license is granted by this repository. Public availability alone does not grant permission to reuse or redistribute every component.

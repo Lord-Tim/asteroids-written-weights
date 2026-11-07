@@ -1,1 +1,3 @@
 1dc174b8f4a5654aa1b44fabb8d959cb15770b643d4bb70796295b175d6d736c  Asteroids-Windows-Player-W1.zip
+115be87c0dac5a9e40d5a1e8a3cf0fc85ac9112e026bea86613f2ad440e40550  Asteroids-Linux-x86_64-S4.tar.gz
+91691fbadaca3537496ebbf79f3d00be3a28aafdaf597c3458f08b1a3b405be7  Asteroids-S4-Source.zip
