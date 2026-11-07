@@ -4,7 +4,9 @@ A downloadable Windows x64 player with an inspectable, separate game-model JSON 
 
 ## Download and play
 
-Open this repository's **Releases** section and download **Asteroids-Windows-Player-W1.zip** from the release assets. GitHub's automatically generated source archives are not the Windows game download.
+**[Download for Windows x64](https://github.com/Lord-Tim/asteroids-written-weights/releases/download/windows-w1/Asteroids-Windows-Player-W1.zip)** (13.1 MiB ZIP)
+
+[Release notes and checksum](https://github.com/Lord-Tim/asteroids-written-weights/releases/tag/windows-w1). GitHub's automatically generated source archives are not the Windows game download.
 
 1. Right-click the downloaded ZIP and choose **Extract All**. Keep all extracted files and folders together.
 2. Open **ModelPlayer-W1.exe**.
